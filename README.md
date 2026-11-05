@@ -60,3 +60,7 @@ Session files are ignored by Git. The JSONL log contains user and assistant mess
 uv run pytest
 bash -n start.sh
 ```
+
+## Evals
+
+`evals/` holds agent tests built with [agent-evals](https://github.com/relai-ai/agent-evals). They run the real agent in Harbor trials and check its tool calls. RELAI runs them on every pull request and reports the result as a Check. See `evals/README.md` to run them locally.
