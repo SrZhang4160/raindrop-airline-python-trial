@@ -1,0 +1,28 @@
+[target]
+name = "SkyServe Airline Support (OpenAI Agents SDK terminal agent)"
+configuration = "default OpenAI provider: OPENAI_API_KEY set, model left to the Agents SDK default (gpt-5.4-mini in openai-agents 0.17.7, overridable by OPENAI_DEFAULT_MODEL)"
+evidence = "README 'Start the Agent' runs ./start.sh -> uv run airline-support -> airline_support.main:chat; README: 'When both OPENAI_API_KEY and ANTHROPIC_API_KEY are set, OpenAI is used'"
+live_paths = ["src/airline_support/**"]
+# evals/harness/adapter.py drives the same chat() that `airline-support` (airline_support.main:run) runs.
+entrypoints = ["uv run airline-support"]
+
+[judge]
+mode = "api"
+provider = "openai"
+model = "gpt-5.2"
+
+[runtime]
+env = ["OPENAI_API_KEY"]
+
+[harbor]
+agent = "airline_harbor_agent:AirlineAgent"
+pythonpath = ["evals/harness", "evals/bin/reference"]
+agent_env = { EVALS_ADAPTER_COMMAND = "python3 /app/adapter.py", EVALS_PASS_ENV = "OPENAI_API_KEY" }
+pass_mark = 0.8
+# RELAI's hosted runner passes these organization secrets to each test (docs: RELAI Secrets).
+secrets = ["OPENAI_API_KEY"]
+
+[harbor.image]
+tag = "airline-evals:deps"
+dockerfile = "evals/harness/Dockerfile"
+context = "."

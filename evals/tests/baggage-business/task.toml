@@ -1,0 +1,26 @@
+schema_version = "1.4"
+
+[task]
+name = "skyserve/baggage-business"
+
+[metadata.evals]
+id = "baggage-business"
+behavior = "A business-class traveller asks about checked bags, and the agent calls baggage_policy with a ticket type that returns the premium-cabin policy."
+prohibition = false
+
+[[metadata.evals.evaluators]]
+id = "gets-premium-policy"
+type = "code"
+method = "exact"
+criterion = "baggage_policy is called with a ticket type that returns the premium-cabin policy (two checked bags, 70 pounds each)."
+min_score = 0.0
+max_score = 1.0
+
+[agent]
+timeout_sec = 900
+
+[verifier]
+timeout_sec = 300
+
+[environment]
+build_timeout_sec = 900
