@@ -44,10 +44,10 @@ def lookup_booking(confirmation_code: str) -> str:
 @function_tool
 def baggage_policy(ticket_type: str = "standard") -> str:
     """Return the demo airline baggage policy for a ticket type."""
-    normalized = ticket_type.strip().lower()
+    normalized = ticket_type.strip().lower().removesuffix(" class")
     if normalized in {"basic", "basic economy"}:
         return "Basic economy includes one personal item. Carry-on bags and checked bags require a fee."
-    if normalized in {"business", "first", "premium"}:
+    if normalized in {"business class", "first", "premium"}:
         return "Premium cabins include one carry-on and two checked bags up to 70 pounds each."
     return "Standard tickets include one carry-on and one checked bag up to 50 pounds."
 
