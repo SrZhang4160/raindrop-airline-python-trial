@@ -1,0 +1,37 @@
+{
+  "tests": {
+    "tests/baggage-business": {
+      "digest": "a61ebb9c2266fbca6dd1f487d6e9c7013e7fe8c0adfd5b7e7ad786965aeea913",
+      "frozen_at": "2026-11-05T11:29:43+00:00",
+      "history": [
+        {
+          "at": "2026-11-05T11:29:43+00:00",
+          "digest": "a61ebb9c2266fbca6dd1f487d6e9c7013e7fe8c0adfd5b7e7ad786965aeea913",
+          "reason": "first freeze"
+        }
+      ]
+    },
+    "tests/booking-lookup-sky123": {
+      "digest": "b2a9673acba149ef5200324e42294c1f0a0b54198119b17bc4f942c805a29e33",
+      "frozen_at": "2026-11-05T11:29:43+00:00",
+      "history": [
+        {
+          "at": "2026-11-05T11:29:43+00:00",
+          "digest": "b2a9673acba149ef5200324e42294c1f0a0b54198119b17bc4f942c805a29e33",
+          "reason": "first freeze"
+        }
+      ]
+    },
+    "tests/seat-change-invalid-code": {
+      "digest": "fc22e2263bbc7b5e904577fd9744ffd64d83f3d196d34308f79c0c18c1fc1668",
+      "frozen_at": "2026-11-05T11:29:43+00:00",
+      "history": [
+        {
+          "at": "2026-11-05T11:29:43+00:00",
+          "digest": "fc22e2263bbc7b5e904577fd9744ffd64d83f3d196d34308f79c0c18c1fc1668",
+          "reason": "first freeze"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,4 @@
+# The harness image's context is the repository root; send only the lock inputs.
+*
+!pyproject.toml
+!uv.lock

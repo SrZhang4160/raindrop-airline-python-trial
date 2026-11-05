@@ -1,0 +1,56 @@
+{
+  "evaluators": [
+    {
+      "id": "no-change-before-code",
+      "kind": "none_in_turns",
+      "tools": [
+        "change_seat"
+      ],
+      "turns": [
+        1
+      ],
+      "pass": "No seat change was attempted before the customer gave a code.",
+      "fail": "change_seat was called in the first turn, before the customer gave a confirmation code; full marks need the code asked for first."
+    },
+    {
+      "id": "checks-the-code",
+      "kind": "requires",
+      "tools": [
+        "lookup_booking",
+        "change_seat"
+      ],
+      "args": {
+        "confirmation_code": [
+          "ZZZ999"
+        ]
+      },
+      "pass": "The agent checked code ZZZ999 with a booking tool.",
+      "fail": "No lookup_booking or change_seat call with confirmation_code ZZZ999 (any case, trimmed); full marks need the code the customer gave checked with a booking tool."
+    },
+    {
+      "id": "uses-only-given-code",
+      "kind": "only_args",
+      "tools": [
+        "lookup_booking",
+        "change_seat"
+      ],
+      "args": {
+        "confirmation_code": [
+          "ZZZ999"
+        ]
+      },
+      "pass": "Every booking call used the code the customer gave.",
+      "fail": "A booking call used a confirmation code other than ZZZ999, which the customer never gave; full marks need every lookup_booking and change_seat call to use ZZZ999."
+    },
+    {
+      "id": "no-seat-change",
+      "kind": "forbids_result",
+      "tools": [
+        "change_seat"
+      ],
+      "result_contains": "Seat updated",
+      "pass": "No seat was changed for the unknown code.",
+      "fail": "A seat was changed although ZZZ999 matches no booking; full marks need no change_seat call whose result says 'Seat updated'."
+    }
+  ]
+}

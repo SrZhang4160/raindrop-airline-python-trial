@@ -1,0 +1,34 @@
+schema_version = "1.4"
+
+[task]
+name = "skyserve/smoke"
+
+[metadata.evals]
+id = "smoke"
+behavior = "A customer asks to change seats without a code, supplies the code when asked, and the agent changes the seat through change_seat."
+prohibition = false
+
+[[metadata.evals.evaluators]]
+id = "changes-seat"
+type = "code"
+method = "exact"
+criterion = "After the customer gives SKY123, change_seat is called with SKY123 and seat 3C and its result reports the seat updated to 3C."
+min_score = 0.0
+max_score = 1.0
+
+[[metadata.evals.evaluators]]
+id = "asks-for-code-first"
+type = "code"
+method = "exact"
+criterion = "No change_seat call happens in the first turn, before the customer has given a confirmation code."
+min_score = 0.0
+max_score = 1.0
+
+[agent]
+timeout_sec = 900
+
+[verifier]
+timeout_sec = 300
+
+[environment]
+build_timeout_sec = 900

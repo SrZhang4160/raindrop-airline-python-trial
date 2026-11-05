@@ -1,0 +1,31 @@
+{
+  "evaluators": [
+    {
+      "id": "looks-up-booking",
+      "kind": "requires",
+      "tools": [
+        "lookup_booking"
+      ],
+      "args": {
+        "confirmation_code": [
+          "SKY123"
+        ]
+      },
+      "result_contains": [
+        "Maya Chen"
+      ],
+      "pass": "lookup_booking(SKY123) ran and returned Maya Chen's booking.",
+      "fail": "No lookup_booking call with confirmation_code SKY123 (any case, trimmed) whose result names Maya Chen; full marks need the booking looked up with the code the customer gave."
+    },
+    {
+      "id": "changes-nothing",
+      "kind": "forbids_result",
+      "tools": [
+        "change_seat"
+      ],
+      "result_contains": "Seat updated",
+      "pass": "No seat was changed.",
+      "fail": "A seat was changed although the customer only asked for a lookup; full marks need no change_seat call whose result says 'Seat updated'."
+    }
+  ]
+}

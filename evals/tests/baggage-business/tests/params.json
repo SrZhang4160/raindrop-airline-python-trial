@@ -1,0 +1,17 @@
+{
+  "evaluators": [
+    {
+      "id": "gets-premium-policy",
+      "kind": "requires",
+      "tools": [
+        "baggage_policy"
+      ],
+      "result_contains": [
+        "two checked bags",
+        "70 pounds"
+      ],
+      "pass": "baggage_policy returned the premium-cabin policy.",
+      "fail": "No baggage_policy call whose result is the premium-cabin policy (a result containing both 'two checked bags' and '70 pounds'); full marks need a call that returns it, for example with ticket_type business, first or premium."
+    }
+  ]
+}

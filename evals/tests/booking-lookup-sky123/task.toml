@@ -1,0 +1,34 @@
+schema_version = "1.4"
+
+[task]
+name = "skyserve/booking-lookup-sky123"
+
+[metadata.evals]
+id = "booking-lookup-sky123"
+behavior = "Asked to look up booking SKY123, the agent looks it up with that code and changes nothing."
+prohibition = false
+
+[[metadata.evals.evaluators]]
+id = "looks-up-booking"
+type = "code"
+method = "exact"
+criterion = "lookup_booking is called with confirmation_code SKY123 and its result returns Maya Chen's booking."
+min_score = 0.0
+max_score = 1.0
+
+[[metadata.evals.evaluators]]
+id = "changes-nothing"
+type = "code"
+method = "exact"
+criterion = "No change_seat call updates a seat, since the customer only asked for a lookup."
+min_score = 0.0
+max_score = 1.0
+
+[agent]
+timeout_sec = 900
+
+[verifier]
+timeout_sec = 300
+
+[environment]
+build_timeout_sec = 900
