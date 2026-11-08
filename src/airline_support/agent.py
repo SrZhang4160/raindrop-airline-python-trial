@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import asyncio
+import os
 from collections.abc import AsyncIterator, Iterable
 from pathlib import Path
 
-from agents import Agent, Runner, function_tool
+from agents import Agent, RunConfig, Runner, function_tool
 from openai.types.responses import ResponseTextDeltaEvent
 
 from airline_support.models import select_model
@@ -103,7 +104,23 @@ async def stream_agent_response(
     kwargs = {"hooks": TrajectoryHooks(recorder)} if recorder is not None else {}
     result = None
     try:
-        result = Runner.run_streamed(create_airline_agent(), input=agent_input, **kwargs)
+        agent = create_airline_agent()
+        if os.environ.get("RAINDROP_WRITE_KEY"):
+            kwargs["run_config"] = RunConfig(
+                workflow_name=agent.name,
+                trace_metadata={
+                    "raindrop_tools": [
+                        {
+                            "type": "function",
+                            "name": tool.name,
+                            "description": tool.description,
+                            "inputSchema": tool.params_json_schema,
+                        }
+                        for tool in agent.tools
+                    ]
+                },
+            )
+        result = Runner.run_streamed(agent, input=agent_input, **kwargs)
         async for event in result.stream_events():
             if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
                 if event.data.delta:

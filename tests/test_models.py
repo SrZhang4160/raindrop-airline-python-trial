@@ -44,6 +44,20 @@ def test_select_model_prefers_openai_when_both_keys_are_set(monkeypatch):
     assert selection.model is None
 
 
+def test_anthropic_keeps_tracing_available_when_monitoring_is_configured(monkeypatch):
+    clear_api_keys(monkeypatch)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "anthropic-key")
+    monkeypatch.setenv("RAINDROP_WRITE_KEY", "synthetic-write-key")
+    calls = []
+    monkeypatch.setattr(models, "set_tracing_disabled", lambda disabled: calls.append(disabled))
+
+    selection = models.select_model()
+
+    assert selection.provider == "anthropic"
+    assert selection.model == models.ANTHROPIC_DEFAULT_MODEL
+    assert calls == [False]
+
+
 def test_select_model_requires_a_supported_api_key(monkeypatch):
     clear_api_keys(monkeypatch)
 

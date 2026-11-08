@@ -111,6 +111,38 @@ def document(path):
 
 
 @pytest.mark.asyncio
+async def test_monitoring_catalog_uses_the_actual_tools_without_changing_stream(
+    monkeypatch, tmp_path
+):
+    monkeypatch.setenv("RAINDROP_WRITE_KEY", "synthetic-write-key")
+
+    @function_tool
+    def policy(ticket_type: str) -> str:
+        """Return the test policy."""
+        return "One bag."
+
+    target = Agent(name="catalog-agent", model=FakeModel([[message("Answer.")]]), tools=[policy])
+    monkeypatch.setattr(sample, "create_airline_agent", lambda: target)
+    original_run = Runner.run_streamed
+    configs = []
+
+    def observed_run(*args, **kwargs):
+        configs.append(kwargs["run_config"])
+        return original_run(*args, **kwargs)
+
+    monkeypatch.setattr(Runner, "run_streamed", observed_run)
+    answer = "".join([part async for part in sample.stream_agent_response(
+        [ChatMessage("user", "Policy?", "now")], trajectory_path=tmp_path / "catalog.json"
+    )])
+    assert answer == "Answer."
+    assert configs[0].workflow_name == target.name
+    catalog = configs[0].trace_metadata["raindrop_tools"]
+    assert catalog[0]["name"] == policy.name
+    assert catalog[0]["inputSchema"] == policy.params_json_schema
+    assert catalog[0]["description"] == policy.description
+
+
+@pytest.mark.asyncio
 async def test_real_sdk_three_turns_record_before_tool_dispatch(monkeypatch, tmp_path):
     path = tmp_path / "trajectory.json"
     monkeypatch.setenv("ATIF_TRAJECTORY_PATH", str(path))
