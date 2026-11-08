@@ -21,7 +21,7 @@ def select_model() -> ModelSelection:
         return ModelSelection(provider="openai", model=None)
 
     if os.environ.get("ANTHROPIC_API_KEY"):
-        set_tracing_disabled(disabled=True)
+        set_tracing_disabled(disabled=not bool(os.environ.get("RAINDROP_WRITE_KEY")))
         return ModelSelection(provider="anthropic", model=ANTHROPIC_DEFAULT_MODEL)
 
     raise RuntimeError("Set OPENAI_API_KEY or ANTHROPIC_API_KEY before starting the agent.")

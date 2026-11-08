@@ -54,6 +54,41 @@ logs/session-<id>.atif.json
 
 Session files are ignored by Git. The JSONL log contains user and assistant messages; the ATIF trajectory also captures model and tool activity. Both preserve turns within the session. Reusing a named session overwrites its previous logs.
 
+## Raindrop monitoring
+
+To monitor terminal conversations, set `RAINDROP_WRITE_KEY` in the ignored `.env`
+file or process environment. Set `RAINDROP_PROJECT_ID` to a project slug if
+needed; leaving it empty uses your organization's default Raindrop project.
+Never commit the real write key. `RAINDROP_DEBUG=true` enables SDK diagnostics
+while checking delivery; return it to `false` after verifying events.
+
+Run the installed `airline-support` entry point from this directory, using your
+normal secure provider-key setup. Each model turn is recorded under the event
+name **SkyServe Airline Support**, with tool calls; the actual tool catalog is
+also supplied through SDK trace metadata. The local OS account identifies the
+user, and the app's session ID groups the conversation. Only one terminal conversation should run per
+process; the framework's Raindrop trace processor is process-global.
+
+Raindrop's PII redaction is enabled for event input/output. It does not guarantee
+redaction of every tool-span field. Treat chat content and tool inputs/outputs
+as telemetry sent to Raindrop and avoid entering secrets. The existing JSONL
+and ATIF logs remain local and unchanged. Queued monitoring data is drained when chat exits,
+including after an agent error. Monitoring initialization failures emit a
+generic warning and allow the chat to continue. Without a write key, no
+Raindrop client is initialized.
+
+To verify delivery, ask `Can you look up booking SKY123?`, then exit the chat.
+In Raindrop, check the **SkyServe Airline Support** event for populated input,
+output, model/token usage, the matching session ID, and a `lookup_booking` tool
+span. API ingestion acknowledgment establishes delivery; use the dashboard to
+confirm the event has been indexed. Direct calls to `stream_agent_response`
+outside the terminal chat do not initialize a monitoring session.
+
+The Anthropic path keeps SDK tracing enabled when a Raindrop key is present;
+provider selection is unchanged. The integration's live verification used
+OpenAI. The Anthropic monitoring configuration has unit coverage but has not
+been verified with a live Anthropic call.
+
 ## Checks
 
 ```sh
