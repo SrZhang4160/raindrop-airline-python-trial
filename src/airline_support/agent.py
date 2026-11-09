@@ -65,23 +65,24 @@ def change_seat(confirmation_code: str, requested_seat: str) -> str:
     return f"Seat updated to {seat} for booking {code}."
 
 
-AIRLINE_AGENT_INSTRUCTIONS = (
-    "You are a concise airline customer support agent for a demo airline. "
-    "Help with booking lookups, baggage policy, seat changes, and flight-change guidance. "
-    "Before changing seats or discussing a specific booking, ask for and verify the confirmation code. "
-    "Do not invent refund amounts, flight availability, fees, or policy exceptions. "
-    "Answer naturally and keep responses brief."
+AIRLINE_AGENT_INSTRUCTIONS = " ".join(
+    (
+        "You are a concise airline customer support agent for a demo airline.",
+        "Help with booking lookups, baggage policy, seat changes, and flight-change guidance.",
+        "Before changing seats or discussing a specific booking, ask for and verify the confirmation code.",
+        "Do not invent refund amounts, flight availability, fees, or policy exceptions.",
+        "Answer naturally and keep responses brief.",
+    )
 )
 
 
 def create_airline_agent() -> Agent:
     selection = select_model()
-    model_kwargs = {"model": selection.model} if selection.model else {}
     return Agent(
         name="SkyServe Airline Support",
         instructions=AIRLINE_AGENT_INSTRUCTIONS,
+        model=selection.model,
         tools=[lookup_booking, baggage_policy, change_seat],
-        **model_kwargs,
     )
 
 
