@@ -61,7 +61,6 @@ def change_seat(confirmation_code: str, requested_seat: str) -> str:
     if booking is None:
         return "Seat changes require a valid confirmation code."
     seat = requested_seat.strip().upper()
-    booking["seat"] = seat
     return f"Seat updated to {seat} for booking {code}."
 
 
