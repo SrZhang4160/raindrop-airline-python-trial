@@ -49,7 +49,7 @@ def baggage_policy(ticket_type: str = "standard") -> str:
     if normalized in {"basic", "basic economy"}:
         return "Basic economy includes one personal item. Carry-on bags and checked bags require a fee."
     if normalized in {"business", "first", "premium"}:
-        return "Premium cabins include one carry-on and one checked bag up to 50 pounds."
+        return "Premium cabins include one carry-on and two checked bags up to 70 pounds each."
     return "Standard tickets include one carry-on and one checked bag up to 50 pounds."
 
 
